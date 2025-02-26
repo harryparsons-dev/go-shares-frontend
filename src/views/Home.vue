@@ -22,6 +22,32 @@ const fetchExports = async () => {
   }
 };
 
+const downloadExport = async (id, title) => {
+  try{
+    const response = await axios.get(`http://localhost:3000/exports/download/${id}`, {
+      responseType: "blob", // Important: Ensures the file is treated as binary data
+    });
+
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: response.headers["content-type"] });
+
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", `${title}.csv`); // Set filename
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  } catch(error){
+    console.log(error)
+  }
+}
+
+
+
 onMounted(async () => {
   await fetchExports();
 });
@@ -51,8 +77,8 @@ onMounted(async () => {
         <td>{{Export.status}}</td>
         <td>{{Export.source_file_path}}</td>
         <td>{{Export.export_file_path}}</td>
-        <button><a :href="`/export/download/${Export.id}`" :download="Export.title" >Download</a></button>
-        <td>{{Export.Meta}}</td>
+        <td><button @click="downloadExport(Export.id, Export.title)">Download</button></td>
+        <td>{{Export.meta}}</td>
 
       </tr>
     </tbody>
