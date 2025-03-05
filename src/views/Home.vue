@@ -1,10 +1,9 @@
-<script setup>
-import {ref} from "vue";
-import { onMounted } from "vue";
+<script setup lang="ts">
+import {onMounted, ref} from "vue";
 import axios from "axios";
+import {Exports} from "@/models/export.ts";
 
-
-const exports = ref([])
+const pdfExports = ref<Exports[]>([])
 
 const fetchExports = async () => {
   try {
@@ -14,8 +13,8 @@ const fetchExports = async () => {
       }
     });
 
-    exports.value =data
-    console.log(exports.value)
+    pdfExports.value =data
+    console.log(pdfExports.value)
 
   }catch(e){
     console.log(e)
@@ -51,6 +50,8 @@ const downloadExport = async (id, title) => {
 onMounted(async () => {
   await fetchExports();
 });
+
+
 </script>
 <template>
   <h1>Shares Converter</h1>
@@ -69,7 +70,7 @@ onMounted(async () => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(Export, i) in exports">
+      <tr v-for="(Export, i) in pdfExports">
         <td>{{Export.id}}</td>
         <td>{{Export.title}}</td>
         <td>{{Export.created_at}}</td>
@@ -77,7 +78,10 @@ onMounted(async () => {
         <td>{{Export.status}}</td>
         <td>{{Export.source_file_path}}</td>
         <td>{{Export.export_file_path}}</td>
-        <td><button @click="downloadExport(Export.id, Export.title)">Download</button></td>
+        <td >
+          <button v-if="Export.status ==='Completed'" @click="downloadExport(Export.id, Export.title)">Download</button>
+          <span v-else></span>
+        </td>
         <td>{{Export.meta}}</td>
 
       </tr>
