@@ -9,12 +9,13 @@ const fetchExports = async () => {
   try {
     const {data} = await axios.get("http://localhost:3000/exports", {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`
       }
     });
 
     pdfExports.value =data
-    console.log(pdfExports.value)
+
 
   }catch(e){
     console.log(e)
@@ -25,6 +26,10 @@ const downloadExport = async (id, title) => {
   try{
     const response = await axios.get(`http://localhost:3000/exports/download/${id}`, {
       responseType: "blob", // Important: Ensures the file is treated as binary data
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+      }
     });
 
     // Create a Blob from the response data
@@ -45,6 +50,38 @@ const downloadExport = async (id, title) => {
   }
 }
 
+const downloadPieChart = async (id, title) => {
+  try{
+    const response = await axios.get(`http://localhost:3000/exports/pie/download/${id}`, {
+      responseType: "blob", // Important: Ensures the file is treated as binary data
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+      }
+    });
+
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: response.headers["content-type"] });
+
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", `${title}.csv`); // Set filename
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  } catch(error){
+    console.log(error)
+  }
+}
+
+const formatDate= (date: Date) => {
+  let newDate = new Date(date)
+  return newDate.toDateString()
+}
 
 
 onMounted(async () => {
@@ -54,7 +91,6 @@ onMounted(async () => {
 
 </script>
 <template>
-  <h1>Shares Converter</h1>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -63,26 +99,29 @@ onMounted(async () => {
         <th scope="col">Date</th>
         <th scope="col">FileSize</th>
         <th scope="col">Status</th>
-        <th scope="col">Source file path</th>
-        <th scope="col">Export file path</th>
-        <th scope="col">Download</th>
-        <th scope="col">Meta</th>
+        <th scope="col">PDF</th>
+        <th scope="col">Pie</th>
+        <th scope="col">Font Size</th>
+        <th scope="col">Padding</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(Export, i) in pdfExports">
         <td>{{Export.id}}</td>
         <td>{{Export.title}}</td>
-        <td>{{Export.created_at}}</td>
+        <td>{{formatDate(Export.created_at)}}</td>
         <td>{{Export.file_size}}</td>
         <td>{{Export.status}}</td>
-        <td>{{Export.source_file_path}}</td>
-        <td>{{Export.export_file_path}}</td>
         <td >
-          <button v-if="Export.status ==='Completed'" @click="downloadExport(Export.id, Export.title)">Download</button>
+          <button v-if="Export.status ==='Completed'" @click="downloadExport(Export.id, Export.title)">Download PDF</button>
+
           <span v-else></span>
         </td>
-        <td>{{Export.meta}}</td>
+        <td>
+        <button v-if="Export.status ==='Completed'" @click="downloadPieChart(Export.id, Export.title)">Download Pie Chart</button>
+        </td>
+        <td>{{Export.font_size}}</td>
+        <td>{{Export.padding}}</td>
 
       </tr>
     </tbody>
