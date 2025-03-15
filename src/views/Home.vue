@@ -11,12 +11,13 @@ const fetchExports = async () => {
     const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/exports`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        "ngrok-skip-browser-warning": "true",
       }
     });
 
     pdfExports.value =data
-
+    console.log(pdfExports.value)
 
   }catch(e){
     console.log(e)
@@ -30,7 +31,7 @@ const downloadExport = async (id, title) => {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        'ngrok-skip-browser-warning': 'true',
+        "ngrok-skip-browser-warning": "true",
       }
     });
 
@@ -94,7 +95,7 @@ onMounted(async () => {
 
 </script>
 <template>
-  <table class="table table-striped">
+  <table class="table table-striped" v-if="pdfExports">
     <thead>
       <tr>
         <th scope="col">ID</th>
