@@ -3,11 +3,12 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {Exports} from "@/models/export.ts";
 
+
 const pdfExports = ref<Exports[]>([])
 
 const fetchExports = async () => {
   try {
-    const {data} = await axios.get("http://localhost:3000/exports", {
+    const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/exports`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`
@@ -24,7 +25,7 @@ const fetchExports = async () => {
 
 const downloadExport = async (id, title) => {
   try{
-    const response = await axios.get(`http://localhost:3000/exports/download/${id}`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/exports/download/${id}`, {
       responseType: "blob", // Important: Ensures the file is treated as binary data
       headers: {
         "Content-Type": "multipart/form-data",
@@ -52,7 +53,7 @@ const downloadExport = async (id, title) => {
 
 const downloadPieChart = async (id, title) => {
   try{
-    const response = await axios.get(`http://localhost:3000/exports/pie/download/${id}`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/exports/pie/download/${id}`, {
       responseType: "blob", // Important: Ensures the file is treated as binary data
       headers: {
         "Content-Type": "multipart/form-data",

@@ -24,7 +24,7 @@ const submitUpload = async () => {
   formData.append('font_size', uploadCsv.value.font_size || null)
   formData.append('padding', uploadCsv.value.padding || null)
   try{
-      const data = await axios.post("http://localhost:3000/exports", formData, {
+      const data = await axios.post(`${import.meta.env.VITE_API_URL}/exports`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${sessionStorage.getItem("token")}`
