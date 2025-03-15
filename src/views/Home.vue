@@ -30,6 +30,7 @@ const downloadExport = async (id, title) => {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        'ngrok-skip-browser-warning': 'true',
       }
     });
 
@@ -58,6 +59,7 @@ const downloadPieChart = async (id, title) => {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        'ngrok-skip-browser-warning': 'true',
       }
     });
 

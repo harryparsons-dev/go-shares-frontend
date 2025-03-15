@@ -28,6 +28,7 @@ const submitUpload = async () => {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${sessionStorage.getItem("token")}`
+          'ngrok-skip-browser-warning': 'true',
         }
 
       } )

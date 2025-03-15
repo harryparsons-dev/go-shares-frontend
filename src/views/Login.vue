@@ -10,7 +10,9 @@ const error = ref<string>("")
 
 const login = async() => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {code: parseInt(code.value)});
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {code: parseInt(code.value)}, {
+      'ngrok-skip-browser-warning': 'true',
+    });
     sessionStorage.setItem("token", response.data.token)
     console.log(response.data)
 
