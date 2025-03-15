@@ -29,7 +29,7 @@ const downloadExport = async (id, title) => {
       responseType: "blob", // Important: Ensures the file is treated as binary data
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         'ngrok-skip-browser-warning': 'true',
       }
     });
@@ -58,7 +58,7 @@ const downloadPieChart = async (id, title) => {
       responseType: "blob", // Important: Ensures the file is treated as binary data
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         'ngrok-skip-browser-warning': 'true',
       }
     });

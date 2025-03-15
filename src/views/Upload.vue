@@ -27,7 +27,7 @@ const submitUpload = async () => {
       const data = await axios.post(`${import.meta.env.VITE_API_URL}/exports`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           'ngrok-skip-browser-warning': 'true',
         }
 
