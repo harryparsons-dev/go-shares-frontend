@@ -95,6 +95,7 @@ onMounted(async () => {
 
 </script>
 <template>
+  <div class="w-100 overflow-auto">
   <table class="table table-striped" v-if="pdfExports">
     <thead>
       <tr>
@@ -130,4 +131,5 @@ onMounted(async () => {
       </tr>
     </tbody>
   </table>
+  </div>
 </template>
