@@ -87,6 +87,26 @@ const formatDate= (date: Date) => {
   return newDate.toDateString()
 }
 
+const deleteExport = async (exp: Exports) =>{
+  const result = confirm("Are you sure you want to delete?")
+  if (result) {
+    try {
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/exports/${exp.id}`, {
+        responseType: "blob", // Important: Ensures the file is treated as binary data
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          'ngrok-skip-browser-warning': 'true',
+        }
+      })
+      await fetchExports()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+}
+
 
 onMounted(async () => {
   await fetchExports();
@@ -104,10 +124,11 @@ onMounted(async () => {
         <th scope="col">Date</th>
         <th scope="col">FileSize</th>
         <th scope="col">Status</th>
-        <th scope="col">PDF</th>
-        <th scope="col">Pie</th>
         <th scope="col">Font Size</th>
         <th scope="col">Padding</th>
+        <th scope="col">PDF</th>
+        <th scope="col">Pie</th>
+        <th scope="col">Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -117,16 +138,18 @@ onMounted(async () => {
         <td>{{formatDate(Export.created_at)}}</td>
         <td>{{Export.file_size}}</td>
         <td>{{Export.status}}</td>
+        <td>{{Export.font_size}}</td>
+        <td>{{Export.padding}}</td>
         <td >
-          <button v-if="Export.status ==='Completed'" @click="downloadExport(Export.id, Export.title)">Download PDF</button>
+          <button v-if="Export.status ==='Completed'" class="btn btn-success" @click="downloadExport(Export.id, Export.title)">Download PDF</button>
 
           <span v-else></span>
         </td>
         <td>
-        <button v-if="Export.status ==='Completed'" @click="downloadPieChart(Export.id, Export.title)">Download Pie Chart</button>
+        <button v-if="Export.status ==='Completed'" class="btn btn-success" @click="downloadPieChart(Export.id, Export.title)">Download Pie Chart</button>
         </td>
-        <td>{{Export.font_size}}</td>
-        <td>{{Export.padding}}</td>
+
+        <td><button class="btn btn-danger" @click="deleteExport(Export)">Delete</button></td>
 
       </tr>
     </tbody>

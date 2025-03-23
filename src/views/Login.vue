@@ -30,17 +30,26 @@ const isAuthenticated = computed(() => {
 </script>
 
 <template>
-  <div class="login-container" v-if="!isAuthenticated">
-    <h2>Enter Access Code</h2>
-    <input type="password" v-model="code" placeholder="Enter code" />
-    <button @click="login">Submit</button>
-    <p v-if="error" class="error">{{ error }}</p>
+  <div class="login-container d-flex justify-content-center" style="height: 100vh;" v-if="!isAuthenticated">
+    <div class="container">
+      <div class="row justify-content-center">
+        <!-- Responsive column: full width on mobile (col-12), 30% width on medium and larger screens (col-md-4) -->
+        <div class="col-12 col-md-4">
+          <div class="bg-light p-4 rounded shadow">
+            <h2 class="text-center">Enter Access Code</h2>
+            <input type="password" class="form-control mb-2" v-model="code" placeholder="Enter code" />
+            <button class="btn btn-primary mb-3 w-100" @click="login">Submit</button>
+            <p v-if="error" class="error text-danger">Incorrect code, please try again.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
   <div v-else>
     You are logged in
   </div>
 </template>
-
 <style scoped>
 
 </style>
