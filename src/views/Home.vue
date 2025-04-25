@@ -41,7 +41,7 @@ const downloadExport = async (id, title) => {
     // Create a temporary link element
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", `${title}.csv`); // Set filename
+    link.setAttribute("download", `${title}.pdf`); 
     document.body.appendChild(link);
     link.click();
 
@@ -56,7 +56,7 @@ const downloadExport = async (id, title) => {
 const downloadPieChart = async (id, title) => {
   try{
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/exports/pie/download/${id}`, {
-      responseType: "blob", // Important: Ensures the file is treated as binary data
+      responseType: "blob", 
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -70,7 +70,7 @@ const downloadPieChart = async (id, title) => {
     // Create a temporary link element
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", `${title}.csv`); // Set filename
+    link.setAttribute("download", `${title}-pie-chart.pdf`); 
     document.body.appendChild(link);
     link.click();
 
@@ -107,6 +107,12 @@ const deleteExport = async (exp: Exports) =>{
 
 }
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes < 1024) return `${bytes} Bytes`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(decimals)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(decimals)} MB`;
+}
+
 
 onMounted(async () => {
   await fetchExports();
@@ -122,7 +128,7 @@ onMounted(async () => {
         <th scope="col">ID</th>
         <th scope="col">Title</th>
         <th scope="col">Date</th>
-        <th scope="col">FileSize</th>
+        <th scope="col">Upload FileSize</th>
         <th scope="col">Status</th>
         <th scope="col">Font Size</th>
         <th scope="col">Padding</th>
@@ -136,7 +142,7 @@ onMounted(async () => {
         <td>{{Export.id}}</td>
         <td>{{Export.title}}</td>
         <td>{{formatDate(Export.created_at)}}</td>
-        <td>{{Export.file_size}}</td>
+        <td>{{formatBytes(Export.file_size)}}</td>
         <td>{{Export.status}}</td>
         <td>{{Export.font_size}}</td>
         <td>{{Export.padding}}</td>
